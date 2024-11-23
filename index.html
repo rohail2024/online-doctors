@@ -1,35 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Online Doctors</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-        .container {
-            text-align: center;
-        }
-        h1 {
-            color: #2c3e50;
-        }
-        p {
-            color: #7f8c8d;
-        }
-    </style>
+  <!-- Firebase SDK Script -->
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCSxmdDMPW8uOoeExuauRpQtSkavJK2LWE",
+      authDomain: "online-doctors-4u.firebaseapp.com",
+      projectId: "online-doctors-4u",
+      storageBucket: "online-doctors-4u.firebasestorage.app",
+      messagingSenderId: "479784655731",
+      appId: "1:479784655731:web:f856fa82e896ff76c28306",
+      measurementId: "G-BMBQ0BJVMK"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+  </script>
+
+  <!-- Meta tags and title -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Doctors</title>
+
+  <!-- Styles -->
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+    }
+    .container {
+        text-align: center;
+    }
+    h1 {
+        color: #2c3e50;
+    }
+    p {
+        color: #7f8c8d;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome to Online Doctors</h1>
-        <p>Your virtual healthcare assistant</p>
-    </div>
+  <div class="container">
+      <h1>Welcome to Online Doctors</h1>
+      <p>Your virtual healthcare assistant</p>
+  </div>
 </body>
 </html>
