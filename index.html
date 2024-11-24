@@ -6,7 +6,7 @@
     // Import the functions you need from the SDKs you need
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
     // Your web app's Firebase configuration
     const firebaseConfig = {
@@ -29,23 +29,26 @@
 
     // Google Sign-In Function
     function googleSignIn() {
-      console.log('Sign-In process started'); // Debugging message
+      signInWithRedirect(auth, provider); // Use redirect instead of popup
+    }
 
-      signInWithPopup(auth, provider)
-        .then((result) => {
+    // Handle the result of the redirect
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result) {
           const user = result.user;
           console.log('User Info:', user);
           alert(`Welcome, ${user.displayName}`);
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          const email = error.email;
-          const credential = error.credential;
-          console.error('Error during sign-in:', errorCode, errorMessage, email, credential);
-          alert('Error during sign-in, please check console for details');
-        });
-    }
+        }
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        const email = error.email;
+        const credential = error.credential;
+        console.error('Error during sign-in:', errorCode, errorMessage, email, credential);
+        alert('Error during sign-in, please check console for details');
+      });
   </script>
 
   <!-- Meta tags and title -->
@@ -91,7 +94,7 @@
 <body>
   <div class="container">
       <h1>Welcome to Online Doctors</h1>
-      <p>Your virtual healthcare assistant</p>
+      <p>Your virtual healthcare assistant, Dr. Rohail Walayat</p>
       <!-- Add Google Sign-In Button -->
       <button onclick="googleSignIn()">Sign in with Google</button>
   </div>
