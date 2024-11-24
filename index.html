@@ -29,6 +29,8 @@
 
     // Google Sign-In Function
     function googleSignIn() {
+      console.log('Sign-In process started'); // Debugging message
+
       signInWithPopup(auth, provider)
         .then((result) => {
           const user = result.user;
@@ -40,7 +42,8 @@
           const errorMessage = error.message;
           const email = error.email;
           const credential = error.credential;
-          console.log(errorCode, errorMessage, email, credential);
+          console.error('Error during sign-in:', errorCode, errorMessage, email, credential);
+          alert('Error during sign-in, please check console for details');
         });
     }
   </script>
