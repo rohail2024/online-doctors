@@ -23,8 +23,8 @@
   const auth = getAuth(app);
   const provider = new GoogleAuthProvider();
 
-  // Google Sign-In Function (Global)
-  window.googleSignIn = function () {
+  // Google Sign-In Function
+  function googleSignIn() {
     signInWithPopup(auth, provider)
       .then((result) => {
         const user = result.user;
@@ -36,5 +36,8 @@
         const errorMessage = error.message;
         console.error("Error during sign-in:", errorCode, errorMessage);
       });
-  };
+  }
+
+  // Expose the function globally
+  window.googleSignIn = googleSignIn;
 </script>
