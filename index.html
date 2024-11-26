@@ -1,108 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- Firebase SDK Script -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Doctors</title>
+<script type="module">
+  // Import Firebase SDKs
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
 
-  <!-- Styles -->
-  <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #f4f4f4;
-    }
-    .container {
-        text-align: center;
-    }
-    h1 {
-        color: #2c3e50;
-    }
-    p {
-        color: #7f8c8d;
-    }
-    button {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background-color: #4285F4;
-        color: white;
-        border: none;
-        font-size: 16px;
-        cursor: pointer;
-    }
-    button:hover {
-        background-color: #357AE8;
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-      <h1>Welcome to Online Doctors</h1>
-      <p>Your virtual healthcare assistant</p>
-      <!-- Google Sign-In Button -->
-      <button onclick="googleSignIn()">Sign in with Google</button>
-  </div>
+  // Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCSxmdDMPW8uOoeExuauRpQtSkavJK2LWE",
+    authDomain: "online-doctors-4u.firebaseapp.com",
+    projectId: "online-doctors-4u",
+    storageBucket: "online-doctors-4u.firebasestorage.app",
+    messagingSenderId: "479784655731",
+    appId: "1:479784655731:web:f856fa82e896ff76c28306",
+    measurementId: "G-BMBQ0BJVMK"
+  };
 
-  <!-- Firebase SDK Script at the end of body -->
-  <script type="module">
-    // Import necessary Firebase SDKs
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyCSxmdDMPW8uOoeExuauRpQtSkavJK2LWE",
-      authDomain: "online-doctors-4u.firebaseapp.com",
-      projectId: "online-doctors-4u",
-      storageBucket: "online-doctors-4u.firebasestorage.app",
-      messagingSenderId: "479784655731",
-      appId: "1:479784655731:web:f856fa82e896ff76c28306",
-      measurementId: "G-BMBQ0BJVMK"
-    };
+  // Initialize Firebase Authentication and Provider
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-    // Initialize Firebase app and analytics
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-
-    // Initialize Firebase Authentication
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    // Google Sign-In function
-    function googleSignIn() {
-      console.log("Sign-In process started..."); // Debugging line to check if button is clicked
-
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          const user = result.user;
-          console.log("Sign-In Successful:", user); // Debugging: Output user info
-          alert(`Welcome, ${user.displayName}`); // Display user name in an alert
-        })
-        .catch((error) => {
-          console.error("Error during sign-in:", error); // Log any errors
-          alert(`Error: ${error.message}`); // Alert the user of the error
-        });
-    }
-  </script>
-</body>
-</html>
-function googleSignIn() {
-  console.log("googleSignIn function loaded"); // Debugging line to check if the function is invoked
-  signInWithPopup(auth, provider)
-    .then((result) => {
-      const user = result.user;
-      console.log("Sign-In Successful:", user); // Debugging: Output user info
-      alert(`Welcome, ${user.displayName}`); // Display user name in an alert
-    })
-    .catch((error) => {
-      console.error("Error during sign-in:", error); // Log any errors
-      alert(`Error: ${error.message}`); // Alert the user of the error
-    });
-}
+  // Google Sign-In Function (Global)
+  window.googleSignIn = function () {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        console.log("User Info:", user);
+        alert(`Welcome, ${user.displayName}`);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error("Error during sign-in:", errorCode, errorMessage);
+      });
+  };
+</script>
