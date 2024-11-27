@@ -1,0 +1,12 @@
+{
+  "name": "online-doctors",
+  "version": "1.0.0",
+  "description": "Your description of the project",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve ."
+  },
+  "dependencies": {
+    // Add your project's dependencies here (e.g., "firebase": "^9.0.0")
+  }
+}
