@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Firebase Authentication</title>
+  <title>Online Doctors Login</title>
 </head>
 <body>
-  <h1>Welcome to the Online Doctors App</h1>
-  <button onclick="googleSignIn()">Sign in with Google</button>
+  <h1>Welcome to the Online Doctors Platform</h1>
+  <button id="googleSignInButton">Sign in with Google</button>
 
+  <!-- Import Firebase SDKs -->
   <script type="module">
-    // Import Firebase SDKs
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
@@ -30,16 +30,9 @@
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
 
-    // Log initialization
-    console.log('Firebase app initialized:', app);
-    console.log('Firebase Analytics initialized:', analytics);
-
     // Initialize Firebase Authentication and Provider
     const auth = getAuth(app);
     const provider = new GoogleAuthProvider();
-
-    // Log authentication initialization
-    console.log('Firebase Auth initialized:', auth);
 
     // Google Sign-In Function
     function googleSignIn() {
@@ -53,12 +46,11 @@
           const errorCode = error.code;
           const errorMessage = error.message;
           console.error("Error during sign-in:", errorCode, errorMessage);
-          alert(`Error during sign-in: ${errorMessage}`);
         });
     }
 
-    // Expose the function globally for button click
-    window.googleSignIn = googleSignIn;
+    // Add event listener to the button
+    document.getElementById('googleSignInButton').addEventListener('click', googleSignIn);
   </script>
 </body>
 </html>
