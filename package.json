@@ -8,6 +8,7 @@
     "deploy": "firebase deploy"
   },
   "dependencies": {
-    "firebase": "^9.0.0"
+    "firebase": "^9.23.0"
+
   }
 }
