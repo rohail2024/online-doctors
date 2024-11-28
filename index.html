@@ -58,11 +58,18 @@
     <button id="googleSignInButton">Sign in with Google</button>
   </div>
 
+  <div>
+    <h2 id="userName"></h2>
+    <p id="userEmail"></p>
+    <img id="userProfilePicture" src="" alt="Profile Picture" />
+  </div>
+
   <!-- Import Firebase SDKs -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";  <!-- Firestore Code Added Here -->
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -78,6 +85,7 @@
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
+    const db = getFirestore(app);  <!-- Initialize Firestore Here -->
 
     // Initialize Firebase Authentication and Provider
     const auth = getAuth(app);
@@ -90,6 +98,8 @@
           const user = result.user;
           console.log("User Info:", user);
           alert(`Welcome, ${user.displayName}`);
+          storeUserData(user);  <!-- Call Function to Store User Data -->
+          updateUserUI(user);  <!-- Call Function to Update User Interface -->
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -113,6 +123,29 @@
           const errorMessage = error.message;
           console.error("Error during sign-in:", errorCode, errorMessage);
         });
+    }
+
+    // Store User Data Function
+    function storeUserData(user) {
+      const userRef = doc(db, "users", user.uid);
+      setDoc(userRef, {
+        name: user.displayName,
+        email: user.email,
+        profilePicture: user.photoURL
+      })
+      .then(() => {
+        console.log("User data saved successfully.");
+      })
+      .catch((error) => {
+        console.error("Error saving user data:", error);
+      });
+    }
+
+    // Update User Interface Function
+    function updateUserUI(user) {
+      document.getElementById('userName').textContent = `Welcome, ${user.displayName}`;
+      document.getElementById('userEmail').textContent = user.email;
+      document.getElementById('userProfilePicture').src = user.photoURL;
     }
 
     // Add event listeners to buttons
