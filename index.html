@@ -98,8 +98,8 @@
           const user = result.user;
           console.log("User Info:", user);
           alert(`Welcome, ${user.displayName}`);
-          storeUserData(user);  <!-- Call Function to Store User Data -->
-          updateUserUI(user);  <!-- Call Function to Update User Interface -->
+          storeUserData(user);  // Call function to store user data
+          updateUserUI(user);  // Call function to update the UI
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -125,7 +125,7 @@
         });
     }
 
-    // Store User Data Function
+    // Store User Data
     function storeUserData(user) {
       const userRef = doc(db, "users", user.uid);
       setDoc(userRef, {
@@ -141,7 +141,7 @@
       });
     }
 
-    // Update User Interface Function
+    // Update User Interface
     function updateUserUI(user) {
       document.getElementById('userName').textContent = `Welcome, ${user.displayName}`;
       document.getElementById('userEmail').textContent = user.email;
