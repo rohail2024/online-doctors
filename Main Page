@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Interface</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 0;
+    }
+    .main-container {
+      padding: 20px;
+      text-align: center;
+    }
+    .user-info {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="main-container">
+    <h1>Welcome to the Online Doctors Platform</h1>
+    <div class="user-info">
+      <h2 id="userName"></h2>
+      <p id="userEmail"></p>
+      <img id="userProfilePicture" src="" alt="Profile Picture" width="100" />
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCSxmdDMPW8uOoeExuauRpQtSkavJK2LWE",
+      authDomain: "online-doctors-4u.firebaseapp.com",
+      projectId: "online-doctors-4u",
+      storageBucket: "online-doctors-4u.appspot.com",
+      messagingSenderId: "479784655731",
+      appId: "1:479784655731:web:f856fa82e896ff76c28306",
+      measurementId: "G-BMBQ0BJVMK"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // Check Auth State
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // User is signed in, display their info
+        document.getElementById('userName').textContent = `Welcome, ${user.displayName}`;
+        document.getElementById('userEmail').textContent = user.email;
+        document.getElementById('userProfilePicture').src = user.photoURL;
+      } else {
+        // No user is signed in, redirect to login page
+        window.location.href = "index.html";
+      }
+    });
+  </script>
+</body>
+</html>
