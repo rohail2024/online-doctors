@@ -1,238 +1,132 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Online Doctors Login</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #87CEEB;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      height: 100vh;
-      margin: 0;
-    }
-    .login-container {
-      background-color: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      width: 300px;
-      text-align: center;
-      position: relative;
-      margin-bottom: 10px;
-    }
-    .login-container h1 {
-      color: #1877f2;
-    }
-    .login-container input[type="text"],
-    .login-container input[type="password"] {
-      width: calc(100% - 22px);
-      padding: 10px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    .login-container button {
-      width: calc(100% - 22px);
-      padding: 10px;
-      margin: 10px 0;
-      background-color: #1877f2;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    .login-container button:hover {
-      background-color: #145dbf;
-    }
-    .error-message {
-      color: red;
-      margin-top: 10px;
-    }
-    .user-info {
-      display: none;
-    }
-    .credits {
-      font-size: 12px;
-      color: #555;
-      text-align: center;
-      margin-top: 10px;
-    }
-    /* Media Queries for Responsiveness */
-    @media (max-width: 768px) {
-      .login-container {
-        width: 90%;
-      }
-    }
-    @media (max-width: 480px) {
-      .login-container {
-        width: 100%;
-        padding: 10px;
-      }
-      .login-container h1 {
-        font-size: 24px;
-      }
-      .login-container button {
-        font-size: 14px;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="login-container">
-    <h1>Online Doctors</h1>
-    <input type="text" id="email" aria-label="Email or Phone Number" placeholder="Email or Phone Number" required>
-    <input type="password" id="password" aria-label="Password" placeholder="Password" required>
-    <button id="loginButton">Log In</button>
-    <button id="googleSignInButton">Sign in with Google</button>
-    <button id="registerButton">Register</button>
-    <div class="error-message" id="errorMessage"></div>
-    <div class="user-info" id="userInfo">
-      <h2 id="userName"></h2>
-      <p id="userEmail"></p>
-      <img id="userProfilePicture" src="" alt="Profile Picture" />
-    </div>
-  </div>
-  <div class="credits">
-    Dr. Rohail Walayat Presentation
-  </div>
+<!-- Import Firebase SDKs -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-analytics.js";
+  import { getAuth, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js";
 
-  <!-- Import Firebase SDKs -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-analytics.js";
-    import { getAuth, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-auth.js";
-    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js";
+  // Firebase Configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyCSxmdDMPW8uOoeExuauRpQtSkavJK2LWE",
+    authDomain: "online-doctors-4u.firebaseapp.com",
+    projectId: "online-doctors-4u",
+    storageBucket: "online-doctors-4u.appspot.com",
+    messagingSenderId: "479784655731",
+    appId: "1:479784655731:web:f856fa82e896ff76c28306",
+    measurementId: "G-BMBQ0BJVMK"
+  };
 
-    // Firebase Configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyCSxmdDMPW8uOoeExuauRpQtSkavJK2LWE",
-      authDomain: "online-doctors-4u.firebaseapp.com",
-      projectId: "online-doctors-4u",
-      storageBucket: "online-doctors-4u.appspot.com",
-      messagingSenderId: "479784655731",
-      appId: "1:479784655731:web:f856fa82e896ff76c28306",
-      measurementId: "G-BMBQ0BJVMK"
-    };
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
-
-    // Google Sign-In Function
-    function googleSignIn() {
-      signInWithPopup(auth, provider)
-        .then((result) => {
-          const user = result.user;
-          console.log("User Info:", user);
-          alert(`Welcome, ${user.displayName}`);
-          storeUserData(user);  // Call function to store user data
-          updateUserUI(user);  // Call function to update the UI
-          window.location.href = "main.html";  // Redirect to main page
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error("Error during sign-in:", errorCode, errorMessage);
-          displayErrorMessage(errorMessage);  // Display error message
-        });
-    }
-
-    // Email/Password Sign-In Function
-    function emailPasswordSignIn() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      if (!validateEmail(email)) {
-        displayErrorMessage("Please enter a valid email address.");
-        return;
-      }
-      signInWithEmailAndPassword(auth, email, password)
-        .then((result) => {
-          const user = result.user;
-          console.log("User Info:", user);
-          alert(`Welcome, ${user.email}`);
-          window.location.href = "main.html";  // Redirect to main page
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error("Error during sign-in:", errorCode, errorMessage);
-          displayErrorMessage(errorMessage);  // Display error message
-        });
-    }
-
-    // Email/Password Registration Function
-    function emailPasswordRegister() {
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      if (!validateEmail(email)) {
-        displayErrorMessage("Please enter a valid email address.");
-        return;
-      }
-      createUserWithEmailAndPassword(auth, email, password)
-        .then((result) => {
-          const user = result.user;
-          console.log("User Info:", user);
-          alert(`Registration successful. Welcome, ${user.email}`);
-          storeUserData(user);  // Call function to store user data
-          window.location.href = "main.html";  // Redirect to main page
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.error("Error during registration:", errorCode, errorMessage);
-          displayErrorMessage(errorMessage);  // Display error message
-        });
-    }
-
-    // Validate Email Function
-    function validateEmail(email) {
-      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return re.test(email);
-    }
-
-    // Store User Data
-    function storeUserData(user) {
-      const userRef = doc(db, "users", user.uid);
-      setDoc(userRef, {
-        name: user.displayName || '',
-        email: user.email,
-        profilePicture: user.photoURL || ''
-      })
-      .then(() => {
-        console.log("User data saved successfully.");
+  // Google Sign-In Function
+  function googleSignIn() {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+        console.log("User Info:", user);
+        alert(`Welcome, ${user.displayName}`);
+        storeUserData(user);  // Call function to store user data
+        updateUserUI(user);  // Call function to update the UI
+        window.location.href = "main.html";  // Redirect to main page
       })
       .catch((error) => {
-        console.error("Error saving user data:", error);
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error("Error during sign-in:", errorCode, errorMessage);
+        displayErrorMessage(errorMessage);  // Display error message
       });
-    }
+  }
 
-    // Update User Interface
-    function updateUserUI(user) {
-      document.getElementById('userInfo').style.display = 'block';
-      document.getElementById('userName').textContent = `Welcome, ${user.displayName || ''}`;
-      document.getElementById('userEmail').textContent = user.email;
-      document.getElementById('userProfilePicture').src = user.photoURL || '';
+  // Email/Password Sign-In Function
+  function emailPasswordSignIn() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    if (!validateEmail(email)) {
+      displayErrorMessage("Please enter a valid email address.");
+      return;
     }
+    signInWithEmailAndPassword(auth, email, password)
+      .then((result) => {
+        const user = result.user;
+        console.log("User Info:", user);
+        alert(`Welcome, ${user.email}`);
+        window.location.href = "main.html";  // Redirect to main page
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error("Error during sign-in:", errorCode, errorMessage);
+        displayErrorMessage(errorMessage);  // Display error message
+      });
+  }
 
-    // Display Error Message
-    function displayErrorMessage(message) {
-      const errorMessageElement = document.getElementById('errorMessage');
-      errorMessageElement.textContent = message;
+  // Email/Password Registration Function
+  function emailPasswordRegister() {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    if (!validateEmail(email)) {
+      displayErrorMessage("Please enter a valid email address.");
+      return;
     }
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((result) => {
+        const user = result.user;
+        console.log("User Info:", user);
+        alert(`Registration successful. Welcome, ${user.email}`);
+        storeUserData(user);  // Call function to store user data
+        window.location.href = "main.html";  // Redirect to main page
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error("Error during registration:", errorCode, errorMessage);
+        displayErrorMessage(errorMessage);  // Display error message
+      });
+  }
 
-    // Add event listeners to buttons
-    document.getElementById('googleSignInButton').addEventListener('click', googleSignIn);
-    document.getElementById('loginButton').addEventListener('click', emailPasswordSignIn);
-    document.getElementById('registerButton').addEventListener('click', emailPasswordRegister);
-  </script>
-</body>
-</html>
+  // Validate Email Function
+  function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  }
+
+  // Store User Data
+  function storeUserData(user) {
+    const userRef = doc(db, "users", user.uid);
+    setDoc(userRef, {
+      name: user.displayName || '',
+      email: user.email,
+      profilePicture: user.photoURL || ''
+    })
+    .then(() => {
+      console.log("User data saved successfully.");
+    })
+    .catch((error) => {
+      console.error("Error saving user data:", error);
+    });
+  }
+
+  // Update User Interface
+  function updateUserUI(user) {
+    document.getElementById('userInfo').style.display = 'block';
+    document.getElementById('userName').textContent = `Welcome, ${user.displayName || ''}`;
+    document.getElementById('userEmail').textContent = user.email;
+    document.getElementById('userProfilePicture').src = user.photoURL || '';
+  }
+
+  // Display Error Message
+  function displayErrorMessage(message) {
+    const errorMessageElement = document.getElementById('errorMessage');
+    errorMessageElement.textContent = message;
+  }
+
+  // Add event listeners to buttons
+  document.getElementById('googleSignInButton').addEventListener('click', googleSignIn);
+  document.getElementById('loginButton').addEventListener('click', emailPasswordSignIn);
+  document.getElementById('registerButton').addEventListener('click', emailPasswordRegister);
+</script>
