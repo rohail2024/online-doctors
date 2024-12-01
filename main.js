@@ -34,7 +34,10 @@ onAuthStateChanged(auth, (user) => {
     displayMessages();
     document.getElementById('sendMessageButton').addEventListener('click', () => sendMessage(user));
     document.getElementById('messageInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') sendMessage(user);
+      if (e.key === 'Enter') {
+        e.preventDefault();  // Prevent default Enter key behavior
+        sendMessage(user);
+      }
     });
     document.getElementById('personaSelect').addEventListener('change', loadPersona);
   } else {
