@@ -10,29 +10,101 @@
       background-color: #f0f2f5;
       margin: 0;
       padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
     }
-    .main-container {
-      padding: 20px;
+    .navbar {
+      background-color: #1877f2;
+      padding: 10px;
+      color: white;
       text-align: center;
     }
-    .user-info {
-      margin-top: 20px;
+    .chat-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      overflow-y: auto;
+    }
+    .message {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .message.sent {
+      justify-content: flex-end;
+    }
+    .message.received {
+      justify-content: flex-start;
+    }
+    .message .text {
+      padding: 10px;
+      border-radius: 8px;
+      max-width: 60%;
+      background-color: #e5e5ea;
+    }
+    .message.sent .text {
+      background-color: #dcf8c6;
+    }
+    .input-container {
+      display: flex;
+      padding: 10px;
+      background-color: white;
+      border-top: 1px solid #ccc;
+    }
+    .input-container input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
+    .input-container button {
+      background-color: #1877f2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+    .persona-selector {
+      display: flex;
+      justify-content: center;
+      padding: 10px;
+      background-color: #1877f2;
+      color: white;
+    }
+    .persona-selector select {
+      padding: 5px;
+      border-radius: 4px;
     }
   </style>
 </head>
 <body>
-  <div class="main-container">
-    <h1>Welcome to the Online Doctors Platform</h1>
-    <div class="user-info">
-      <h2 id="userName"></h2>
-      <p id="userEmail"></p>
-      <img id="userProfilePicture" src="" alt="Profile Picture" width="100" />
-    </div>
+  <div class="navbar">
+    <h2>Online Doctors Platform</h2>
+  </div>
+  <div class="persona-selector">
+    <label for="personaSelect">Choose Persona:</label>
+    <select id="personaSelect">
+      <option value="persona1">Persona 1</option>
+      <option value="persona2">Persona 2</option>
+      <!-- Add more personas as needed -->
+    </select>
+  </div>
+  <div class="chat-container" id="chatContainer">
+    <!-- Messages will be dynamically added here -->
+  </div>
+  <div class="input-container">
+    <input type="text" id="messageInput" placeholder="Type a message...">
+    <button id="sendMessageButton">Send</button>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -48,19 +120,64 @@
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
 
     // Check Auth State
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        // User is signed in, display their info
-        document.getElementById('userName').textContent = `Welcome, ${user.displayName}`;
-        document.getElementById('userEmail').textContent = user.email;
-        document.getElementById('userProfilePicture').src = user.photoURL;
+        // User is signed in
+        displayMessages();
+        document.getElementById('sendMessageButton').addEventListener('click', () => sendMessage(user));
+        document.getElementById('personaSelect').addEventListener('change', loadPersona);
       } else {
-        // No user is signed in, redirect to login page
+        // No user is signed in
         window.location.href = "index.html";
       }
     });
+
+    // Send Message
+    async function sendMessage(user) {
+      const messageInput = document.getElementById('messageInput');
+      const persona = document.getElementById('personaSelect').value;
+      if (messageInput.value.trim() !== "") {
+        await addDoc(collection(db, "messages"), {
+          text: messageInput.value,
+          uid: user.uid,
+          timestamp: new Date(),
+          displayName: user.displayName,
+          persona: persona
+        });
+        messageInput.value = "";  // Clear input field after sending
+      }
+    }
+
+    // Display Messages
+    function displayMessages() {
+      const q = query(collection(db, "messages"), orderBy("timestamp"));
+      const chatContainer = document.getElementById('chatContainer');
+      onSnapshot(q, (snapshot) => {
+        chatContainer.innerHTML = "";  // Clear existing messages
+        snapshot.forEach((doc) => {
+          const message = doc.data();
+          const messageElement = document.createElement('div');
+          messageElement.classList.add('message');
+          messageElement.classList.add(message.uid === auth.currentUser.uid ? 'sent' : 'received');
+          messageElement.innerHTML = `
+            <div class="text">
+              <strong>${message.displayName}:</strong> ${message.text} (Persona: ${message.persona})
+            </div>
+          `;
+          chatContainer.appendChild(messageElement);
+          chatContainer.scrollTop = chatContainer.scrollHeight;  // Scroll to bottom
+        });
+      });
+    }
+
+    // Load Persona
+    function loadPersona() {
+      const persona = document.getElementById('personaSelect').value;
+      // Load the corresponding persona logic here
+    }
   </script>
 </body>
 </html>
