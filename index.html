@@ -227,4 +227,14 @@
 
     // Display Error Message
     function displayErrorMessage(message) {
-      const errorMessageElement = document.get[_{{{CITATION{{{_1{](https://github.com/hello-jerryle/portfolio/tree/96e16ad47d3eddfd961092edb3dc14f1723d7694/BACKGROUND.md)
+      const errorMessageElement = document.getElementById('errorMessage');
+      errorMessageElement.textContent = message;
+    }
+
+    // Add event listeners to buttons
+    document.getElementById('googleSignInButton').addEventListener('click', googleSignIn);
+    document.getElementById('loginButton').addEventListener('click', emailPasswordSignIn);
+    document.getElementById('registerButton').addEventListener('click', emailPasswordRegister);
+  </script>
+</body>
+</html>
