@@ -50,6 +50,10 @@
     .login-container button:hover {
       background-color: #145dbf;
     }
+    .error-message {
+      color: red;
+      margin-top: 10px;
+    }
     .user-info {
       display: none;
     }
@@ -87,6 +91,7 @@
     <button id="loginButton">Log In</button>
     <button id="googleSignInButton">Sign in with Google</button>
     <button id="registerButton">Register</button>
+    <div class="error-message" id="errorMessage"></div>
     <div class="user-info" id="userInfo">
       <h2 id="userName"></h2>
       <p id="userEmail"></p>
@@ -139,6 +144,7 @@
           const errorCode = error.code;
           const errorMessage = error.message;
           console.error("Error during sign-in:", errorCode, errorMessage);
+          displayErrorMessage(errorMessage);  // Display error message
         });
     }
 
@@ -147,7 +153,7 @@
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       if (!validateEmail(email)) {
-        alert("Please enter a valid email address.");
+        displayErrorMessage("Please enter a valid email address.");
         return;
       }
       signInWithEmailAndPassword(auth, email, password)
@@ -161,6 +167,7 @@
           const errorCode = error.code;
           const errorMessage = error.message;
           console.error("Error during sign-in:", errorCode, errorMessage);
+          displayErrorMessage(errorMessage);  // Display error message
         });
     }
 
@@ -169,7 +176,7 @@
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       if (!validateEmail(email)) {
-        alert("Please enter a valid email address.");
+        displayErrorMessage("Please enter a valid email address.");
         return;
       }
       createUserWithEmailAndPassword(auth, email, password)
@@ -184,6 +191,7 @@
           const errorCode = error.code;
           const errorMessage = error.message;
           console.error("Error during registration:", errorCode, errorMessage);
+          displayErrorMessage(errorMessage);  // Display error message
         });
     }
 
@@ -217,10 +225,6 @@
       document.getElementById('userProfilePicture').src = user.photoURL || '';
     }
 
-    // Add event listeners to buttons
-    document.getElementById('googleSignInButton').addEventListener('click', googleSignIn);
-    document.getElementById('loginButton').addEventListener('click', emailPasswordSignIn);
-    document.getElementById('registerButton').addEventListener('click', emailPasswordRegister);
-  </script>
-</body>
-</html>
+    // Display Error Message
+    function displayErrorMessage(message) {
+      const errorMessageElement = document.get[_{{{CITATION{{{_1{](https://github.com/hello-jerryle/portfolio/tree/96e16ad47d3eddfd961092edb3dc14f1723d7694/BACKGROUND.md)
