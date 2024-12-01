@@ -242,4 +242,42 @@
     document.getElementById('loginButton').addEventListener('click', emailPasswordSignIn);
     document.getElementById('registerButton').addEventListener('click', emailPasswordRegister);
   </script>
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Online Doctors Main</title>
+  <style>
+    /* Your existing styles */
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Welcome to Online Doctors</h1>
+    <div class="profile">
+      <img id="profilePicture" alt="Profile Picture" />
+      <span id="profileName"></span>
+      <button id="logoutButton">Logout</button>
+    </div>
+    <div class="settings">
+      <label for="themeSelect">Theme:</label>
+      <select id="themeSelect">
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+        <option value="bright">Bright</option>
+      </select>
+    </div>
+  </div>
+  <div id="chatContainer"></div>
+  <input type="text" id="messageInput" placeholder="Type your message" />
+  <button id="sendMessageButton">Send</button>
+  <button class="emoji-button">😊</button>
+
+  <!-- Import Firebase SDKs -->
+  <script type="module">
+    // Your updated `main.js` script here
+  </script>
+</body>
+</html>
 </body
