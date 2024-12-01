@@ -101,7 +101,6 @@
   <div class="credits">
     Dr. Rohail Walayat Presentation
   </div>
-
   <!-- Import Firebase SDKs -->
   <script type="module">
     console.log("JavaScript is loaded");
@@ -241,6 +240,11 @@
     document.getElementById('googleSignInButton').addEventListener('click', googleSignIn);
     document.getElementById('loginButton').addEventListener('click', emailPasswordSignIn);
     document.getElementById('registerButton').addEventListener('click', emailPasswordRegister);
-  </script>
-</body>
-</html>
+
+    // Add event listener for "Enter" key
+    document.getElementById('email').addEventListener('keyup', function(event) {
+      if (event.key === 'Enter') {
+        emailPasswordSignIn();
+      }
+    });
+    document.getElementById('password').add[_{{{CITATION{{{_1{](https://github.com/devilzane10/Thesis-Archive/tree/9252e850010950fbec67b5897c8e3ccc2f57a533/edit.php)
