@@ -86,6 +86,7 @@
     <input type="password" id="password" aria-label="Password" placeholder="Password" required>
     <button id="loginButton">Log In</button>
     <button id="googleSignInButton">Sign in with Google</button>
+    <button id="registerButton">Register</button>
     <div class="user-info" id="userInfo">
       <h2 id="userName"></h2>
       <p id="userEmail"></p>
@@ -100,7 +101,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
+    import { getAuth, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithPopup, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
     import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
 
     // Firebase Configuration
@@ -163,6 +164,29 @@
         });
     }
 
+    // Email/Password Registration Function
+    function emailPasswordRegister() {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      if (!validateEmail(email)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((result) => {
+          const user = result.user;
+          console.log("User Info:", user);
+          alert(`Registration successful. Welcome, ${user.email}`);
+          storeUserData(user);  // Call function to store user data
+          window.location.href = "main.html";  // Redirect to main page
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.error("Error during registration:", errorCode, errorMessage);
+        });
+    }
+
     // Validate Email Function
     function validateEmail(email) {
       const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -173,9 +197,9 @@
     function storeUserData(user) {
       const userRef = doc(db, "users", user.uid);
       setDoc(userRef, {
-        name: user.displayName,
+        name: user.displayName || '',
         email: user.email,
-        profilePicture: user.photoURL
+        profilePicture: user.photoURL || ''
       })
       .then(() => {
         console.log("User data saved successfully.");
@@ -188,14 +212,15 @@
     // Update User Interface
     function updateUserUI(user) {
       document.getElementById('userInfo').style.display = 'block';
-      document.getElementById('userName').textContent = `Welcome, ${user.displayName}`;
+      document.getElementById('userName').textContent = `Welcome, ${user.displayName || ''}`;
       document.getElementById('userEmail').textContent = user.email;
-      document.getElementById('userProfilePicture').src = user.photoURL;
+      document.getElementById('userProfilePicture').src = user.photoURL || '';
     }
 
     // Add event listeners to buttons
     document.getElementById('googleSignInButton').addEventListener('click', googleSignIn);
     document.getElementById('loginButton').addEventListener('click', emailPasswordSignIn);
+    document.getElementById('registerButton').addEventListener('click', emailPasswordRegister);
   </script>
 </body>
 </html>
