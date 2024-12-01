@@ -1,17 +1,17 @@
 // Import Firebase SDKs
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/9.9.1/firebase-firestore.js";
 
 // Firebase Configuration
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_STORAGE_BUCKET",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID",
-  measurementId: "YOUR_MEASUREMENT_ID"
+  apiKey: "AIzaSyCSxmdDMPW8uOoeExuauRpQtSkavJK2LWE",
+  authDomain: "online-doctors-4u.firebaseapp.com",
+  projectId: "online-doctors-4u",
+  storageBucket: "online-doctors-4u.appspot.com",
+  messagingSenderId: "479784655731",
+  appId: "1:479784655731:web:f856fa82e896ff76c28306",
+  measurementId: "G-BMBQ0BJVMK"
 };
 
 // Initialize Firebase
@@ -36,11 +36,15 @@ onAuthStateChanged(auth, (user) => {
     document.getElementById('messageInput').addEventListener('keypress', (e) => {
       if (e.key === 'Enter' || e.keyCode === 13) {
         e.preventDefault();  // Prevent default behavior
-        console.log('Enter key pressed');
         sendMessage(user);
       }
     });
     document.getElementById('personaSelect').addEventListener('change', loadPersona);
+    document.getElementById('logoutButton').addEventListener('click', () => signOut(auth).then(() => {
+      window.location.href = "index.html";
+    }));
+    // Add user profile and settings
+    displayUserProfile(user);
   } else {
     // No user is signed in
     window.location.href = "index.html";
@@ -52,7 +56,6 @@ async function sendMessage(user) {
   const messageInput = document.getElementById('messageInput');
   const persona = document.getElementById('personaSelect').value;
   if (messageInput.value.trim() !== "") {
-    console.log('Sending message:', messageInput.value);
     await addDoc(collection(db, "messages"), {
       text: messageInput.value,
       uid: user.uid,
@@ -90,4 +93,10 @@ function displayMessages() {
 function loadPersona() {
   const persona = document.getElementById('personaSelect').value;
   // Load the corresponding persona logic here
+}
+
+// Display User Profile
+function displayUserProfile(user) {
+  document.getElementById('profileName').textContent = user.displayName;
+  document.getElementById('profilePicture').src = user.photoURL || '';
 }
