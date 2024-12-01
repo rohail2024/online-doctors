@@ -59,13 +59,31 @@
       width: 100%;
       text-align: center;
     }
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+      .login-container {
+        width: 90%;
+      }
+    }
+    @media (max-width: 480px) {
+      .login-container {
+        width: 100%;
+        padding: 10px;
+      }
+      .login-container h1 {
+        font-size: 24px;
+      }
+      .login-container button {
+        font-size: 14px;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="login-container">
     <h1>Online Doctors</h1>
-    <input type="text" id="email" aria-label="Email or Phone Number" placeholder="Email or Phone Number">
-    <input type="password" id="password" aria-label="Password" placeholder="Password">
+    <input type="text" id="email" aria-label="Email or Phone Number" placeholder="Email or Phone Number" required>
+    <input type="password" id="password" aria-label="Password" placeholder="Password" required>
     <button id="loginButton">Log In</button>
     <button id="googleSignInButton">Sign in with Google</button>
     <div class="user-info" id="userInfo">
@@ -127,6 +145,10 @@
     function emailPasswordSignIn() {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
+      if (!validateEmail(email)) {
+        alert("Please enter a valid email address.");
+        return;
+      }
       signInWithEmailAndPassword(auth, email, password)
         .then((result) => {
           const user = result.user;
@@ -139,6 +161,12 @@
           const errorMessage = error.message;
           console.error("Error during sign-in:", errorCode, errorMessage);
         });
+    }
+
+    // Validate Email Function
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
     }
 
     // Store User Data
